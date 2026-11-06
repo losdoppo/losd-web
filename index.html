@@ -1,915 +1,407 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOSD | Editorial, Tecnología, Entretenimiento e Internet</title>
-<meta name="description" content="LOSD: revistas gratis y pagas, tecnología, e-sports, entretenimiento, clases, canal LOSD.TV e internet con 50% de descuento.">
-<style>
-  :root{
-    --negro:#0a0c0e;
-    --carbon:#121518;
-    --carbon2:#1a1e22;
-    --turq:#14c3c3;
-    --turq-osc:#0b8f93;
-    --gris:#9aa3ab;
-    --perla:#cfd5db;
-    --blanco:#ffffff;
-    --coral:#ff7a4d;
-    --oro:#e8b84a;
-    --borde:rgba(207,213,219,.14);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--negro);
-    color:#e6eaee;
-    line-height:1.6;
-    overflow-x:hidden;
-  }
-  a{color:var(--turq);text-decoration:none}
-  a:hover{color:var(--coral)}
-  img,svg{max-width:100%;display:block}
-
-  /* ---------- Marco de ondas (esquinas) ---------- */
-  .marco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-  .marco::before,.marco::after{
-    content:"";position:absolute;width:420px;height:420px;border-radius:50%;
-    border:1px solid rgba(20,195,195,.12);
-  }
-  .marco::before{top:-220px;left:-220px;box-shadow:0 0 0 60px rgba(20,195,195,.03),0 0 0 120px rgba(20,195,195,.02)}
-  .marco::after{bottom:-220px;right:-220px;box-shadow:0 0 0 60px rgba(20,195,195,.03),0 0 0 120px rgba(20,195,195,.02)}
-  main,header,footer,section{position:relative;z-index:1}
-
-  /* ---------- Header / Navegación ---------- */
-  header{
-    position:fixed;top:0;left:0;right:0;z-index:50;
-    background:rgba(10,12,14,.82);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--borde);
-  }
-  .nav{
-    max-width:1200px;margin:auto;padding:14px 22px;
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-  }
-  .logo{display:flex;align-items:center;gap:10px;color:var(--blanco);font-weight:800;letter-spacing:4px;font-size:22px}
-  .logo span{background:linear-gradient(135deg,#fff,#9aa3ab 60%,#cfd5db);-webkit-background-clip:text;color:transparent}
-  .menu{display:flex;gap:18px;flex-wrap:wrap;list-style:none}
-  .menu a{color:var(--perla);font-size:14px;letter-spacing:.5px}
-  .menu a:hover{color:var(--turq)}
-  .menu-btn{display:none;background:none;border:1px solid var(--borde);color:var(--blanco);padding:6px 12px;border-radius:6px;cursor:pointer}
-  @media(max-width:920px){
-    .menu{display:none;position:absolute;top:100%;left:0;right:0;background:var(--carbon);flex-direction:column;padding:16px 22px;gap:12px;border-bottom:1px solid var(--borde)}
-    .menu.open{display:flex}
-    .menu-btn{display:block}
-  }
-
-  /* ---------- Secciones genéricas ---------- */
-  .sec{padding:96px 22px}
-  .wrap{max-width:1200px;margin:auto}
-  .alt{background:linear-gradient(180deg,var(--carbon) 0%,var(--negro) 100%)}
-  .etiqueta{
-    display:inline-block;font-size:12px;letter-spacing:3px;text-transform:uppercase;
-    color:var(--turq);border:1px solid rgba(20,195,195,.35);padding:4px 12px;border-radius:999px;margin-bottom:14px;
-  }
-  h1,h2,h3{color:var(--blanco);line-height:1.2}
-  h2{font-size:clamp(28px,4vw,42px);letter-spacing:1px;margin-bottom:14px}
-  h2 .linea{display:block;width:70px;height:3px;background:linear-gradient(90deg,var(--turq),var(--coral));margin-top:14px;border-radius:2px}
-  h3{font-size:19px;margin-bottom:8px}
-  .lead{color:var(--gris);max-width:760px;font-size:17px;margin-bottom:38px}
-  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-  .card{
-    background:linear-gradient(160deg,var(--carbon2),var(--carbon));
-    border:1px solid var(--borde);border-radius:14px;padding:26px;
-    transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden;
-  }
-  .card:hover{transform:translateY(-4px);border-color:rgba(20,195,195,.5);box-shadow:0 14px 40px rgba(20,195,195,.08)}
-  .card .ico{font-size:30px;margin-bottom:12px}
-  .card p{color:var(--gris);font-size:15px}
-  .btn{
-    display:inline-block;background:var(--turq);color:var(--negro);font-weight:700;
-    padding:12px 24px;border-radius:8px;border:none;cursor:pointer;font-size:15px;transition:background .2s,transform .2s;
-  }
-  .btn:hover{background:var(--coral);color:var(--blanco);transform:translateY(-2px)}
-  .btn.sec2{background:transparent;color:var(--perla);border:1px solid var(--borde)}
-  .btn.sec2:hover{border-color:var(--turq);color:var(--turq);background:transparent}
-  .badge{display:inline-block;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(255,122,77,.15);color:var(--coral);font-weight:700}
-  .badge.g{background:rgba(232,184,74,.15);color:var(--oro)}
-  .badge.t{background:rgba(20,195,195,.12);color:var(--turq)}
-
-  /* ---------- Hero ---------- */
-  .hero{min-height:100vh;display:flex;align-items:center;padding:140px 22px 80px;background:
-    radial-gradient(circle at 80% 20%,rgba(20,195,195,.12),transparent 40%),
-    radial-gradient(circle at 10% 90%,rgba(255,122,77,.08),transparent 35%),var(--negro)}
-  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
-  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;text-align:center}.hero .btns{justify-content:center}}
-  .hero h1{font-size:clamp(40px,7vw,80px);letter-spacing:6px;font-weight:900;margin-bottom:6px}
-  .hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--turq),#7fe9e9);-webkit-background-clip:text;color:transparent}
-  .hero .sub{font-size:20px;color:var(--perla);letter-spacing:4px;text-transform:uppercase;margin-bottom:18px}
-  .hero p{color:var(--gris);font-size:17px;margin-bottom:26px;max-width:600px}
-  .hero .btns{display:flex;gap:12px;flex-wrap:wrap}
-  .hero .url{margin-top:24px;font-size:14px;color:var(--gris)}
-  .hero .url b{color:var(--coral);font-weight:600}
-  .emblema{
-    aspect-ratio:1/1;border-radius:24px;border:1px solid var(--borde);
-    background:linear-gradient(145deg,#1b2025,#0d0f11);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);
-  }
-  .emblema::before{content:"";position:absolute;inset:14px;border:1px solid rgba(20,195,195,.35);border-radius:18px}
-  .emblema .big{font-size:clamp(60px,10vw,110px);font-weight:900;letter-spacing:10px;background:linear-gradient(180deg,#fff,#9aa3ab);-webkit-background-clip:text;color:transparent}
-  .emblema .tag{color:var(--turq);letter-spacing:4px;font-size:13px;margin-top:6px}
-  .emblema .cuad{position:absolute;bottom:26px;font-size:13px;color:var(--gris);letter-spacing:2px}
-
-  /* ---------- Revistas ---------- */
-  .revista-box{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  @media(max-width:800px){.revista-box{grid-template-columns:1fr}}
-  .qr-dorado{
-    border:1px solid rgba(232,184,74,.5);border-radius:16px;padding:28px;
-    background:linear-gradient(145deg,rgba(232,184,74,.12),rgba(0,0,0,0) 60%);
-    display:flex;gap:22px;align-items:center;
-  }
-  .qr-dorado .qr{width:110px;height:110px;flex-shrink:0;background:linear-gradient(135deg,#f4d37a,#b8862b);padding:8px;border-radius:10px}
-  .qr-dorado .qr svg{width:100%;height:100%}
-  .qr-dorado h3{color:var(--oro)}
-  .tabla{width:100%;border-collapse:collapse;margin-top:20px;font-size:15px}
-  .tabla th,.tabla td{padding:12px 14px;border-bottom:1px solid var(--borde);text-align:left}
-  .tabla th{color:var(--turq);font-weight:600;letter-spacing:1px;font-size:13px;text-transform:uppercase}
-  .tabla td{color:var(--perla)}
-
-  /* ---------- Temas tabs ---------- */
-  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
-  .tab{background:var(--carbon2);color:var(--perla);border:1px solid var(--borde);padding:10px 18px;border-radius:999px;cursor:pointer;font-size:14px;transition:.2s}
-  .tab.act,.tab:hover{background:var(--turq);color:var(--negro);border-color:var(--turq);font-weight:700}
-  .panel{display:none}
-  .panel.act{display:block;animation:fade .4s}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .lista{list-style:none}
-  .lista li{padding:8px 0 8px 26px;position:relative;color:var(--perla);border-bottom:1px dashed var(--borde)}
-  .lista li::before{content:"";position:absolute;left:0;top:16px;width:10px;height:10px;border-radius:50%;background:var(--turq)}
-
-  /* ---------- E-sports ---------- */
-  .esports{background:
-    linear-gradient(120deg,rgba(20,195,195,.12),transparent 50%),
-    linear-gradient(300deg,rgba(255,122,77,.10),transparent 45%),var(--carbon)}
-  .scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
-  @media(max-width:800px){.scoreboard{grid-template-columns:repeat(2,1fr)}}
-  .score{border:1px solid var(--borde);border-radius:12px;padding:20px;text-align:center;background:var(--negro)}
-  .score .n{font-size:34px;font-weight:900;color:var(--blanco)}
-  .score .n.c{color:var(--coral)}
-  .score .l{font-size:12px;letter-spacing:2px;color:var(--gris);text-transform:uppercase}
-  .genres{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
-  .genre{padding:22px;border-radius:12px;border-left:4px solid var(--turq);background:var(--negro)}
-  .genre.coral{border-color:var(--coral)}
-  .genre.oro{border-color:var(--oro)}
-  .genre h3{font-size:17px}
-  .genre p{color:var(--gris);font-size:14px}
-
-  /* ---------- Entretenimiento / Eventos ---------- */
-  .timeline{display:grid;gap:14px}
-  .evento{display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;padding:18px 22px;border:1px solid var(--borde);border-radius:12px;background:var(--carbon2)}
-  @media(max-width:680px){.evento{grid-template-columns:1fr}}
-  .evento .fecha{font-weight:800;color:var(--turq);font-size:18px}
-  .evento p{color:var(--gris);font-size:14px}
-
-  /* ---------- Clases ---------- */
-  .planes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-  .plan{border:1px solid var(--borde);border-radius:16px;padding:30px;background:var(--carbon2);position:relative}
-  .plan.dest{border-color:var(--turq);box-shadow:0 0 40px rgba(20,195,195,.12)}
-  .plan .precio{font-size:28px;font-weight:800;color:var(--blanco);margin:10px 0}
-  .plan .precio small{font-size:14px;color:var(--gris);font-weight:400}
-  .plan ul{list-style:none;margin:14px 0 20px}
-  .plan li{padding:6px 0;color:var(--perla);font-size:15px}
-  .plan li::before{content:"✓ ";color:var(--turq);font-weight:700}
-
-  /* ---------- Canal LOSD.TV ---------- */
-  .tv{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-  @media(max-width:860px){.tv{grid-template-columns:1fr}}
-  .box-tv{
-    aspect-ratio:16/10;border-radius:18px;background:#000;border:2px solid #222;
-    position:relative;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6);
-    display:flex;align-items:center;justify-content:center;flex-direction:column;
-  }
-  .box-tv::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 4px)}
-  .box-tv .dot{position:absolute;top:16px;left:16px;display:flex;gap:6px;align-items:center;font-size:12px;letter-spacing:2px;color:var(--coral)}
-  .box-tv .dot i{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:pulso 1.2s infinite}
-  @keyframes pulso{50%{opacity:.2}}
-  .box-tv .cs{font-size:clamp(36px,6vw,64px);font-weight:900;color:var(--blanco);letter-spacing:4px}
-  .box-tv .cs span{color:var(--turq)}
-  .box-tv .soon{margin-top:12px;color:var(--gris);letter-spacing:3px;font-size:13px}
-  .canales-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0}
-  .canales-stats div{background:var(--carbon2);border:1px solid var(--borde);border-radius:10px;padding:14px}
-  .canales-stats b{display:block;color:var(--turq);font-size:22px}
-  .canales-stats span{font-size:13px;color:var(--gris)}
-
-  /* ---------- Internet ---------- */
-  .internet{background:linear-gradient(180deg,var(--negro),var(--carbon))}
-  .enlaces{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:26px 0}
-  .enlace{padding:20px;border-radius:12px;background:var(--negro);border:1px solid var(--borde);text-align:center}
-  .enlace .ico{font-size:30px}
-  .enlace h3{font-size:16px;margin:8px 0 4px}
-  .enlace p{font-size:13px;color:var(--gris)}
-  .descuento{
-    background:linear-gradient(120deg,rgba(255,122,77,.15),rgba(20,195,195,.10));
-    border:1px solid rgba(255,122,77,.4);border-radius:16px;padding:30px;margin-top:20px;
-    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
-  }
-  .descuento .pct{font-size:clamp(50px,8vw,90px);font-weight:900;color:var(--coral);line-height:1}
-  .descuento p{color:var(--perla);max-width:520px}
-  .mapa{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-  .mapa span{padding:7px 14px;background:var(--carbon2);border:1px solid var(--borde);border-radius:999px;font-size:14px}
-  .mapa span.pr{border-color:var(--turq);color:var(--turq)}
-  .mapa span.pro{border-color:var(--coral);color:var(--coral)}
-
-  /* ---------- Comunitario / Comercios ---------- */
-  .pasos{counter-reset:p;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
-  .paso{counter-increment:p;padding:26px;border-radius:14px;background:var(--carbon2);border:1px solid var(--borde);position:relative}
-  .paso::before{content:counter(p,decimal-leading-zero);font-size:40px;font-weight:900;color:rgba(20,195,195,.25);position:absolute;top:10px;right:16px}
-  .paso h3{font-size:17px}
-  .paso p{color:var(--gris);font-size:14px}
-
-  /* ---------- Empleos (buscador) ---------- */
-  .buscador{display:grid;grid-template-columns:2fr 1fr auto;gap:12px;margin-bottom:24px}
-  @media(max-width:760px){.buscador{grid-template-columns:1fr}}
-  input,select,textarea{
-    width:100%;padding:13px 16px;border-radius:10px;background:var(--negro);
-    border:1px solid var(--borde);color:var(--blanco);font:inherit;font-size:15px;
-  }
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
-  .jobs{display:grid;gap:14px}
-  .job{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:22px;border-radius:12px;background:var(--carbon2);border:1px solid var(--borde)}
-  @media(max-width:680px){.job{grid-template-columns:1fr}}
-  .job h3{margin-bottom:4px}
-  .job p{color:var(--gris);font-size:14px}
-  .job .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-  .urgente{color:var(--coral);font-weight:700;font-size:13px;letter-spacing:1px}
-  .vacio{display:none;color:var(--gris);padding:20px;text-align:center}
-  .form-cv{margin-top:34px;padding:30px;border-radius:16px;background:var(--carbon2);border:1px solid var(--borde)}
-  .form-cv .fila{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-  @media(max-width:680px){.form-cv .fila{grid-template-columns:1fr}}
-  .form-cv label{font-size:13px;color:var(--gris);display:block;margin-bottom:6px}
-  .form-cv textarea{min-height:90px}
-  .aviso{margin-top:12px;color:var(--turq);font-size:14px;display:none}
-
-  /* ---------- Suscripción ---------- */
-  .suscri{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-  .suscri input{flex:1;min-width:220px}
-
-  /* ---------- Proximamente ---------- */
-  .futuro{background:
-    radial-gradient(circle at 50% 0%,rgba(255,122,77,.12),transparent 50%),var(--negro)}
-  .futuro .card h3{color:var(--blanco)}
-  .countdown-ttl{font-size:13px;letter-spacing:3px;color:var(--gris);text-transform:uppercase}
-
-  /* ---------- Contacto / Footer ---------- */
-  .contacto{display:grid;grid-template-columns:1fr 1fr;gap:30px}
-  @media(max-width:760px){.contacto{grid-template-columns:1fr}}
-  .dato{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
-  .dato .ico{font-size:24px}
-  .dato b{color:var(--blanco);display:block}
-  .dato span{color:var(--gris);font-size:15px}
-  .dato .fono{color:var(--turq);font-weight:700}
-  footer{border-top:1px solid var(--borde);padding:40px 22px;background:#060708}
-  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-  footer p{color:var(--gris);font-size:13px}
-  footer .redes a{margin-left:14px;color:var(--coral);font-weight:600}
-
-  /* ---------- Modal ---------- */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-  .modal.open{display:flex}
-  .modal .caja{max-width:460px;width:100%;background:var(--carbon);border:1px solid var(--turq);border-radius:16px;padding:30px;text-align:center}
-  .modal h3{font-size:22px;margin-bottom:10px}
-  .modal p{color:var(--gris);margin-bottom:18px}
-
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
-  .reveal.vis{opacity:1;transform:none}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d12">
+  <meta name="description" content="LOSD reúne editorial, tecnología, e-sports, academia, streaming y conectividad. Conocé el ecosistema que estamos preparando para Argentina y LATAM.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:site_name" content="LOSD">
+  <meta property="og:title" content="LOSD — Un ecosistema. Mil formas de conectar.">
+  <meta property="og:description" content="Tecnología, entretenimiento, conectividad y educación. Muy pronto.">
+  <meta property="og:image" content="https://losd.com.ar/assets/img/og-losd.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>LOSD — Tecnología, entretenimiento y conectividad</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://formsubmit.co">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="marco"></div>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
-  <nav class="nav">
-    <a href="#inicio" class="logo" aria-label="LOSD inicio">
-      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
-        <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#9aa3ab"/></linearGradient></defs>
-        <path d="M20 4 L22 20 L20 36 L18 20 Z" fill="url(#g1)"/>
-        <path d="M20 4 L34 12 L22 20 Z" fill="#14c3c3" opacity=".9"/>
-        <circle cx="20" cy="20" r="3" fill="#ff7a4d"/>
-      </svg>
-      <span>LOSD</span>
-    </a>
-    <button class="menu-btn" id="menuBtn" aria-label="Menú">☰ Menú</button>
-    <ul class="menu" id="menu">
-      <li><a href="#editorial">Editorial</a></li>
-      <li><a href="#esports">E-Sports</a></li>
-      <li><a href="#eventos">Eventos</a></li>
-      <li><a href="#clases">Clases</a></li>
-      <li><a href="#tv">LOSD.TV</a></li>
-      <li><a href="#internet">Internet</a></li>
-      <li><a href="#comercios">Comercios</a></li>
-      <li><a href="#empleo">Trabajá con nosotros</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-    </ul>
-  </nav>
-</header>
-
-<main>
-
-<!-- ============ INICIO ============ -->
-<section id="inicio" class="hero">
-  <div class="wrap">
-    <div class="reveal vis">
-      <span class="etiqueta">Editorial · Tecnología · Entretenimiento</span>
-      <h1>L<em>O</em>SD</h1>
-      <div class="sub">Conocimiento para todos</div>
-      <p>Revistas gratis y pagas, tecnología, deportes electrónicos, entretenimiento, bienestar, clases y conectividad. Todo en un solo lugar, pensado para la gente real.</p>
-      <div class="btns">
-        <a href="#editorial" class="btn">Explorar revistas</a>
-        <a href="#internet" class="btn sec2">Internet con 50% OFF</a>
-      </div>
-      <div class="url">Visitanos en <b>www.losd.com</b>.ar</div>
-    </div>
-    <div class="emblema reveal vis" aria-hidden="true">
-      <svg width="90" height="90" viewBox="0 0 40 40" style="margin-bottom:8px">
-        <defs><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#9aa3ab"/></linearGradient></defs>
-        <path d="M20 4 L22 20 L20 36 L18 20 Z" fill="url(#g2)"/>
-        <path d="M20 4 L34 12 L22 20 Z" fill="#14c3c3" opacity=".9"/>
-        <path d="M20 4 L6 12 L18 20 Z" fill="#9aa3ab" opacity=".7"/>
-        <circle cx="20" cy="20" r="3" fill="#ff7a4d"/>
-      </svg>
-      <div class="big">LOSD</div>
-      <div class="tag">TELECOMUNICACIONES · ENERGÍAS RENOVABLES</div>
-      <div class="cuad">CEO · EDITORIAL</div>
-    </div>
+  <div class="announcement-bar">
+    <span class="pulse-dot" aria-hidden="true"></span>
+    <span>ESTAMOS CONSTRUYENDO EL ECOSISTEMA LOSD</span>
+    <span class="announcement-divider">/</span>
+    <span class="announcement-muted">Pre-lanzamiento · Edición 2026</span>
+    <a href="#ecosistema">Descubrí el proyecto <span aria-hidden="true">↗</span></a>
   </div>
-</section>
 
-<!-- ============ EDITORIAL ============ -->
-<section id="editorial" class="sec alt">
-  <div class="wrap">
-    <span class="etiqueta">Nuestras revistas</span>
-    <h2>Editorial LOSD<span class="linea"></span></h2>
-    <p class="lead">Publicamos revistas gratuitas con publicidad y sponsors, y revistas pagas. Cada edición trae temas clave de tecnología y estilo de vida, con 10 a 20 páginas por número.</p>
-
-    <div class="revista-box">
-      <div class="card">
-        <span class="badge t">Gratis</span>
-        <h3 style="margin-top:12px">Revistas gratuitas</h3>
-        <p>De 10 a 20 páginas. Cada 1 o 2 hojas hay un tema destacado. Financiadas por publicidad y sponsors que respaldan el proyecto.</p>
-        <table class="tabla">
-          <tr><th>Formato</th><td>10 a 20 páginas</td></tr>
-          <tr><th>Financiación</th><td>Publicidad y sponsors</td></tr>
-          <tr><th>Acceso</th><td>Libre y gratuito</td></tr>
-        </table>
-      </div>
-      <div class="card">
-        <span class="badge">Pagas</span>
-        <h3 style="margin-top:12px">Revistas pagas</h3>
-        <p>Contenido de mayor profundidad, guías prácticas y material extra para suscriptores. Las revistas pagas también se distribuyen en kioscos y puestos de diarios.</p>
-        <table class="tabla">
-          <tr><th>Contenido</th><td>Guías y análisis en profundidad</td></tr>
-          <tr><th>Distribución</th><td>Suscripción y kioscos</td></tr>
-          <tr><th>Beneficio</th><td>Acceso a LOSD.TV y clases</td></tr>
-        </table>
-      </div>
+  <header class="site-header" id="inicio">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="LOSD, volver al inicio">
+        <span class="brand-symbol" aria-hidden="true"><span>L</span><i></i></span>
+        <span class="brand-word">LOSD<span>.TV</span><small>TECNOLOGÍA · CONTENIDO · COMUNIDAD</small></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+        <a href="#editorial">Editorial</a>
+        <a href="#tecnologia">Tecnología</a>
+        <a href="#esports">E-Sports</a>
+        <a href="#academia">Academia</a>
+        <a href="#losdtv">LOSD.TV</a>
+        <a href="#internet">Internet</a>
+        <a href="#sumate">Sumate</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <button class="button button-small button-outline header-cta" data-open-subscribe>
+        <span class="button-icon" aria-hidden="true">↗</span> Quiero enterarme
+      </button>
     </div>
+  </header>
 
-    <div class="qr-dorado reveal" style="margin-top:24px">
-      <div class="qr" aria-label="Código QR dorado">
-        <svg viewBox="0 0 21 21" shape-rendering="crispEdges">
-          <rect width="21" height="21" fill="#fff"/>
-          <g fill="#0a0c0e">
-            <rect x="1" y="1" width="7" height="7"/><rect x="2" y="2" width="5" height="5" fill="#fff"/><rect x="3" y="3" width="3" height="3"/>
-            <rect x="13" y="1" width="7" height="7"/><rect x="14" y="2" width="5" height="5" fill="#fff"/><rect x="15" y="3" width="3" height="3"/>
-            <rect x="1" y="13" width="7" height="7"/><rect x="2" y="14" width="5" height="5" fill="#fff"/><rect x="3" y="15" width="3" height="3"/>
-            <rect x="9" y="9" width="2" height="2"/><rect x="11" y="11" width="2" height="2"/><rect x="9" y="13" width="2" height="2"/><rect x="13" y="13" width="2" height="2"/><rect x="17" y="9" width="2" height="2"/><rect x="15" y="17" width="2" height="2"/><rect x="19" y="19" width="2" height="2"/><rect x="9" y="17" width="2" height="2"/>
-          </g>
-        </svg>
-      </div>
-      <div>
-        <span class="badge g">Sorteo sorpresa</span>
-        <h3 style="margin-top:8px">QR dorado cada 1.000 ejemplares</h3>
-        <p style="color:var(--gris)">En una de nuestras revistas se imprime un <b style="color:var(--oro)">QR dorado</b> cada mil ejemplares. Quien lo encuentre y lo escanee participa de un premio sorpresa. Consultá las bases en cada edición.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ TEMÁTICAS ============ -->
-<section id="tematicas" class="sec">
-  <div class="wrap">
-    <span class="etiqueta">Temáticas</span>
-    <h2>Lo que encontrás en LOSD<span class="linea"></span></h2>
-    <p class="lead">Explorá cada área. Hacé clic en una pestaña para ver el detalle.</p>
-
-    <div class="tabs" role="tablist">
-      <button class="tab act" data-tab="t1">Energías renovables</button>
-      <button class="tab" data-tab="t2">Informática y redes</button>
-      <button class="tab" data-tab="t3">IA y programación</button>
-      <button class="tab" data-tab="t4">Celulares y smart</button>
-      <button class="tab" data-tab="t5">Electrónica y cables</button>
-    </div>
-
-    <div class="panel act" id="t1">
-      <div class="card">
-        <div class="ico">🌬️</div>
-        <h3>Energías renovables</h3>
-        <ul class="lista">
-          <li>Energía solar, eólica y sistemas híbridos</li>
-          <li>Instalación de paneles y molinos eólicos</li>
-          <li>Autoconsumo y eficiencia energética en hogares y comercios</li>
-        </ul>
-      </div>
-    </div>
-    <div class="panel" id="t2">
-      <div class="card">
-        <div class="ico">🖧</div>
-        <h3>Informática, redes y soporte</h3>
-        <ul class="lista">
-          <li>Redes LAN, WAN, Wi-Fi y configuración de routers</li>
-          <li>Soporte técnico, mantenimiento y academias de informática</li>
-          <li>Hardware, sistemas operativos y ciberseguridad básica</li>
-        </ul>
-      </div>
-    </div>
-    <div class="panel" id="t3">
-      <div class="card">
-        <div class="ico">🤖</div>
-        <h3>Próxima generación de IA y desarrollo</h3>
-        <ul class="lista">
-          <li>Nuevas herramientas de inteligencia artificial</li>
-          <li>Guías para nuevos programadores y desarrolladores</li>
-          <li>Carreras afines, bootcamps y certificaciones</li>
-        </ul>
-      </div>
-    </div>
-    <div class="panel" id="t4">
-      <div class="card">
-        <div class="ico">📱</div>
-        <h3>Celulares, electrodomésticos y smart</h3>
-        <ul class="lista">
-          <li>Tecnología celular, reparación y novedades</li>
-          <li>Electrodomésticos inteligentes y dispositivos IoT</li>
-          <li>Hogar conectado y domótica</li>
-        </ul>
-      </div>
-    </div>
-    <div class="panel" id="t5">
-      <div class="card">
-        <div class="ico">🔌</div>
-        <h3>Electrónica, UPS y cableado</h3>
-        <ul class="lista">
-          <li>UPS e inversores para sistemas electrónicos e informáticos</li>
-          <li>Cables coaxiales, fibra óptica, cable de red y comunicación</li>
-          <li>Tomas monofásicas y trifásicas: 220 V y 380 V, en hogares, oficinas y comercios</li>
-          <li>Electrónica básica e intermedia para aprender desde cero</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ E-SPORTS ============ -->
-<section id="esports" class="sec esports">
-  <div class="wrap">
-    <span class="etiqueta">Prioridad · Deportes electrónicos</span>
-    <h2>E-Sports LOSD<span class="linea"></span></h2>
-    <p class="lead">Torneos, ligas y eventos de deportes electrónicos. Para quienes juegan Steam, en modo competitivo o cooperativo, y para quienes quieren verlos en vivo.</p>
-
-    <div class="scoreboard">
-      <div class="score"><div class="n">FPS</div><div class="l">Tiros en primera persona</div></div>
-      <div class="score"><div class="n c">RTS</div><div class="l">Estrategia en tiempo real</div></div>
-      <div class="score"><div class="n">VS</div><div class="l">Versus competitivo</div></div>
-      <div class="score"><div class="n c">COOP</div><div class="l">Cooperativo en equipo</div></div>
-    </div>
-
-    <div class="genres">
-      <div class="genre"><h3>🎯 Shooters y tiros</h3><p>Torneos de disparos competitivos, rondas por equipos y ranking de jugadores.</p></div>
-      <div class="genre coral"><h3>♟️ Estrategia</h3><p>Ligas de estrategia por turnos y en tiempo real, con mesas de análisis.</p></div>
-      <div class="genre oro"><h3>🤝 Cooperativo</h3><p>Desafíos en equipo, misiones y campeonatos para dúos, tríos o escuadrones.</p></div>
-    </div>
-    <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
-      <a href="#contacto" class="btn">Quiero participar</a>
-      <a href="#tv" class="btn sec2">Ver en LOSD.TV</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============ EVENTOS Y ENTRETENIMIENTO ============ -->
-<section id="eventos" class="sec alt">
-  <div class="wrap">
-    <span class="etiqueta">Entretenimiento · Gratis</span>
-    <h2>Eventos y cultura<span class="linea"></span></h2>
-    <p class="lead">Ferias gratuitas, concursos, galerías de arte, plazas con música en vivo y las tendencias del momento. Argentina y Latinoamérica.</p>
-
-    <div class="grid">
-      <div class="card"><div class="ico">🎮</div><h3>Ferias y e-sports</h3><p>Ferias tecnológicas y de videojuegos gratuitas, en Argentina y en el exterior.</p></div>
-      <div class="card"><div class="ico">🖼️</div><h3>Galerías de arte</h3><p>Muestras gratuitas en Ciudad Autónoma de Buenos Aires, Córdoba Capital y otras ciudades.</p></div>
-      <div class="card"><div class="ico">🎸</div><h3>Música en plazas</h3><p>Bandas en vivo gratis en plazas, exposiciones al aire libre y festivales barriales.</p></div>
-      <div class="card"><div class="ico">🏆</div><h3>Concursos y sorteos</h3><p>Concursos para la comunidad, con premios y sorpresas para quienes participen.</p></div>
-    </div>
-
-    <h3 style="margin:40px 0 18px;color:var(--blanco)">Próximos eventos destacados</h3>
-    <div class="timeline">
-      <div class="evento"><div class="fecha">PRÓX.</div><div><h3>Feria tecnológica gratuita</h3><p>Stands de electrónica, redes y energías renovables.</p></div><span class="badge t">Gratis</span></div>
-      <div class="evento"><div class="fecha">PRÓX.</div><div><h3>Torneo de e-sports</h3><p>Shooters, estrategia y cooperativo por equipos.</p></div><span class="badge">Inscripción</span></div>
-      <div class="evento"><div class="fecha">PRÓX.</div><div><h3>Música en vivo en plaza</h3><p>Bandas locales y exposiciones de arte al aire libre.</p></div><span class="badge g">Entrada libre</span></div>
-    </div>
-    <p style="margin-top:14px;color:var(--gris);font-size:13px">* Las fechas y sedes se publican a medida que se confirman.</p>
-  </div>
-</section>
-
-<!-- ============ BIENESTAR ============ -->
-<section id="bienestar" class="sec">
-  <div class="wrap">
-    <span class="etiqueta">Cuerpo y alma</span>
-    <h2>Bienestar<span class="linea"></span></h2>
-    <p class="lead">Espacios para el espíritu, la autoayuda y el cuidado del cuerpo. Contenido pensado para el bienestar diario.</p>
-    <div class="grid">
-      <div class="card"><div class="ico">🕊️</div><h3>Espíritu y religión</h3><p>Reflexiones, espiritualidad y contenidos de fe, con respeto por todas las creencias.</p></div>
-      <div class="card"><div class="ico">🌱</div><h3>Autoayuda</h3><p>Hábitos, motivación, equilibrio emocional y crecimiento personal.</p></div>
-      <div class="card"><div class="ico">🧘</div><h3>Salud y cuerpo</h3><p>Hábitos saludables, movimiento, descanso y alimentación consciente.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ NOVELAS Y LIBROS ============ -->
-<section id="novelas" class="sec alt">
-  <div class="wrap">
-    <span class="etiqueta">Historias</span>
-    <h2>Novelas, libros y series<span class="linea"></span></h2>
-    <p class="lead">Historias para disfrutar: romance, empresariales, autoayuda y lo más visto en Asia y el mundo, en plataformas gratuitas.</p>
-    <div class="grid">
-      <div class="card"><span class="badge t">Tendencia</span><h3 style="margin-top:12px">Novelas románticas</h3><p>Historias de amor de Corea, Japón, China y otros países.</p></div>
-      <div class="card"><span class="badge t">Tendencia</span><h3 style="margin-top:12px">Dramas asiáticos</h3><p>Series de tendencia en Latinoamérica, con subtítulos y estrenos.</p></div>
-      <div class="card"><span class="badge t">Tendencia</span><h3 style="margin-top:12px">Empresariales y autoayuda</h3><p>Historias de negocios y superación personal para inspirarte.</p></div>
-      <div class="card"><span class="badge t">Libros</span><h3 style="margin-top:12px">Reseñas y lecturas</h3><p>Recomendaciones de libros y novelas, con reseñas de la editorial.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CLASES ============ -->
-<section id="clases" class="sec">
-  <div class="wrap">
-    <span class="etiqueta">Formación</span>
-    <h2>Clases LOSD<span class="linea"></span></h2>
-    <p class="lead">Clases grupales e individuales, presenciales y virtuales. Dictadas en plataformas privadas de videoconferencia. El primer mes es gratis para los primeros suscriptores.</p>
-    <div class="planes">
-      <div class="plan dest">
-        <span class="badge g">Primer mes</span>
-        <h3 style="margin-top:12px">Primeros suscriptores</h3>
-        <div class="precio">$0 <small>el primer mes</small></div>
-        <ul><li>Acceso a clases grupales</li><li>Material digital</li><li>Soporte de la comunidad</li></ul>
-        <a href="#contacto" class="btn">Quiero mi mes gratis</a>
-      </div>
-      <div class="plan">
-        <h3>Grupales</h3>
-        <div class="precio">Consultar</div>
-        <ul><li>Redes, soporte y electrónica</li><li>IA y programación</li><li>Energías renovables</li></ul>
-        <a href="#contacto" class="btn sec2">Consultar</a>
-      </div>
-      <div class="plan">
-        <h3>Individuales</h3>
-        <div class="precio">Consultar</div>
-        <ul><li>Clases personalizadas</li><li>Presenciales o virtuales</li><li>Horarios a medida</li></ul>
-        <a href="#contacto" class="btn sec2">Consultar</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ LOSD.TV ============ -->
-<section id="tv" class="sec alt">
-  <div class="wrap tv">
-    <div>
-      <span class="etiqueta">Canal propio</span>
-      <h2>LOSD.TV<span class="linea"></span></h2>
-      <p class="lead" style="margin-bottom:20px">Nuestro streaming propio con señal TDA e IPTV. Próximamente, un equipo exclusivo para suscriptores y seguidores de nuestros canales.</p>
-      <div class="canales-stats">
-        <div><b>100</b><span>Canales privados</span></div>
-        <div><b>24/7</b><span>Directo y asimétrico</span></div>
-        <div><b>+</b><span>Educativo, entretenimiento, tecnología</span></div>
-        <div><b>🎁</b><span>Equipo de regalo para suscriptores</span></div>
-      </div>
-      <ul class="lista">
-        <li>Energías, informática, electrónica y e-sports</li>
-        <li>Espíritu, novelas y series de tendencia</li>
-        <li>Próximas tecnologías y celulares</li>
-      </ul>
-      <div style="margin-top:24px"><a href="#contacto" class="btn">Quiero ser suscriptor</a></div>
-    </div>
-    <div class="box-tv" aria-label="Pantalla LOSD.TV próximamente">
-      <div class="dot"><i></i> PRÓXIMAMENTE</div>
-      <div class="cs">LOSD<span>.TV</span></div>
-      <div class="soon">COMING SOON</div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ INTERNET ============ -->
-<section id="internet" class="sec internet">
-  <div class="wrap">
-    <span class="etiqueta">Conectividad</span>
-    <h2>Internet para suscriptores<span class="linea"></span></h2>
-    <p class="lead">Convenio con proveedores de cada zona. Los suscriptores con servicio de internet acceden a un <b style="color:var(--coral)">50% de descuento</b>.</p>
-
-    <div class="enlaces">
-      <div class="enlace"><div class="ico">🧵</div><h3>Fibra óptica FTTH</h3><p>Alta velocidad y estabilidad</p></div>
-      <div class="enlace"><div class="ico">🛰️</div><h3>Satelital</h3><p>Cobertura en zonas alejadas</p></div>
-      <div class="enlace"><div class="ico">📡</div><h3>Terrestre</h3><p>Radioenlace y cobertura regional</p></div>
-      <div class="enlace"><div class="ico">📶</div><h3>4G / 5G</h3><p>Conexión móvil en convenio</p></div>
-    </div>
-
-    <div class="descuento">
-      <div>
-        <div class="pct">50%</div>
-        <div style="color:var(--coral);font-weight:700;letter-spacing:2px">DE DESCUENTO</div>
-      </div>
-      <p>Para suscriptores de LOSD que contraten internet con nuestros proveedores asociados en su localidad. Podés combinar dos o tres servicios: si cae un enlace, el otro te respalda. Ideal para trabajar desde casa (home office).</p>
-    </div>
-
-    <h3 style="margin:34px 0 4px;color:var(--blanco)">Disponible en</h3>
-    <div class="mapa">
-      <span class="pr">Argentina · ciudades y localidades por provincia</span>
-      <span class="pro">Próximamente: Chile</span>
-      <span class="pro">Próximamente: Brasil</span>
-      <span class="pro">Próximamente: Perú</span>
-      <span class="pro">Próximamente: México</span>
-      <span>Latinoamérica (LATAM)</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============ COMUNIDAD / HOSTING ============ -->
-<section id="comunidad" class="sec">
-  <div class="wrap">
-    <span class="etiqueta">Profesionales y comercios</span>
-    <h2>Internet comunitario y hosting<span class="linea"></span></h2>
-    <p class="lead">Herramientas gratuitas, equipamiento a bajo costo y acompañamiento para que profesionales, comercios y empresas ofrezcan internet a sus clientes y generen ingresos.</p>
-
-    <div class="pasos">
-      <div class="paso"><h3>Hotspot</h3><p>Te damos herramientas gratuitas para que tu local ofrezca WiFi a tus clientes.</p></div>
-      <div class="paso"><h3>Internet comunitario</h3><p>Compartí tu conexión de forma administrada, con equipos que LOSD te acompaña a instalar.</p></div>
-      <div class="paso"><h3>Enlace de respaldo</h3><p>Fibra, satelital o terrestre: si un enlace cae, otro te mantiene conectado.</p></div>
-      <div class="paso"><h3>Hosting</h3><p>Servicio de hosting para profesionales y comerciantes que quieren su presencia online.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ COMERCIOS ============ -->
-<section id="comercios" class="sec alt">
-  <div class="wrap">
-    <span class="etiqueta">Kioscos y comercios</span>
-    <h2>Sumá tu comercio a LOSD<span class="linea"></span></h2>
-    <p class="lead">Si distribuís nuestras revistas, tu comercio recibe beneficios en internet. Cuanto más vendas, más ganás.</p>
-    <div class="grid">
-      <div class="card"><div class="ico">🗞️</div><h3>Kioscos y puestos de diario</h3><p>Vendé las revistas pagas y gratis. A cambio, recibís descuento en internet.</p></div>
-      <div class="card"><div class="ico">🏪</div><h3>Comercios del centro</h3><p>Ofrecé la revista gratis a tus clientes y sumá internet para tu local.</p></div>
-      <div class="card"><div class="ico">🚀</div><h3>Ventas destacadas</h3><p>Si vendés muy bien, LOSD cubre el costo de tu internet: fibra, satelital o 4G/5G.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PRÓXIMAMENTE ============ -->
-<section id="proximamente" class="sec futuro">
-  <div class="wrap">
-    <span class="etiqueta">Lo que viene</span>
-    <h2>Próximamente<span class="linea"></span></h2>
-    <p class="lead">Nuevas tecnologías y celulares que marcarán la próxima tendencia, totalmente diferentes a las actuales.</p>
-    <div class="grid">
-      <div class="card"><span class="badge">Próximo</span><h3 style="margin-top:12px">Nuevas tecnologías</h3><p>Lo que viene antes de que llegue a las tiendas.</p></div>
-      <div class="card"><span class="badge">Próximo</span><h3 style="margin-top:12px">Celulares del futuro</h3><p>Dispositivos de próxima generación, con análisis y pruebas.</p></div>
-      <div class="card"><span class="badge">Próximo</span><h3 style="margin-top:12px">Suscripción exclusiva</h3><p>Contenido, videos y LOSD.TV para suscriptores.</p></div>
-    </div>
-    <div class="suscri">
-      <input type="email" id="emailSus" placeholder="Tu email para recibir novedades" aria-label="Email">
-      <button class="btn" id="btnSus">Suscribirme</button>
-    </div>
-    <div class="aviso" id="avisoSus">¡Listo! Te avisaremos de los próximos lanzamientos.</div>
-  </div>
-</section>
-
-<!-- ============ EMPLEO ============ -->
-<section id="empleo" class="sec alt">
-  <div class="wrap">
-    <span class="etiqueta">Recursos humanos</span>
-    <h2>Trabajá con nosotros<span class="linea"></span></h2>
-    <p class="lead">Buscamos gente con ganas de crecer. Filtrá por área, buscá el puesto que te interesa y enviá tu CV.</p>
-
-    <div class="buscador">
-      <input type="text" id="buscaJob" placeholder="Buscar puesto, carrera o habilidad..." aria-label="Buscar">
-      <select id="filtroArea" aria-label="Área">
-        <option value="">Todas las áreas</option>
-        <option value="Ilustración">Ilustración</option>
-        <option value="Tecnología">Tecnología</option>
-        <option value="Administración">Administración</option>
-        <option value="Educación">Educación</option>
-        <option value="Ventas">Ventas y comercios</option>
-      </select>
-      <button class="btn sec2" id="btnLimpiar">Limpiar</button>
-    </div>
-
-    <div class="jobs" id="listaJobs">
-      <div class="job" data-area="Ilustración" data-txt="ilustrador ilustradores ferias eventos arte diseño">
-        <div>
-          <span class="urgente">⚡ URGENTE</span>
-          <h3>Ilustrador/a para ferias y eventos</h3>
-          <p>Ilustraciones para ferias y eventos. Adjuntá tu CV y portfolio.</p>
-          <div class="tags"><span class="badge t">Ilustración</span><span class="badge t">Eventos</span></div>
+  <main id="contenido">
+    <!-- HERO -->
+    <section class="hero-section">
+      <div class="hero-grid-lines" aria-hidden="true"></div>
+      <div class="container hero-layout">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="eyebrow-line"></span> EL PRÓXIMO CAPÍTULO EMPIEZA ACÁ</div>
+          <div class="hero-status"><span class="status-dot"></span> PRÓXIMAMENTE <b>·</b> EDICIÓN 2026</div>
+          <h1>¡Agarrate, Argentina y LATAM!<br><em>Se viene algo grande.</em></h1>
+          <p class="hero-lead">LOSD conecta tecnología, entretenimiento, conectividad y educación en un solo ecosistema. Ideas que se convierten en experiencias, herramientas y comunidad.</p>
+          <div class="hero-actions">
+            <button class="button button-primary" data-open-subscribe>Quiero ser parte <span aria-hidden="true">↗</span></button>
+            <a class="button button-ghost" href="#ecosistema">Explorar el proyecto <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-footnote"><span class="tiny-check">✓</span> Novedades, beneficios de lanzamiento y convocatorias en un mismo lugar.</div>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Ilustrador/a para ferias y eventos">Postularme</a>
-      </div>
-      <div class="job" data-area="Tecnología" data-txt="programador desarrollador programacion software backend frontend">
-        <div>
-          <span class="urgente">⚡ URGENTE</span>
-          <h3>Programadores y desarrolladores</h3>
-          <p>Front-end, back-end y desarrollo de herramientas para la comunidad LOSD.</p>
-          <div class="tags"><span class="badge t">Programación</span><span class="badge t">IA</span></div>
+
+        <div class="hero-visual reveal reveal-delay" aria-label="Identidad visual LOSD">
+          <div class="visual-orbit orbit-one"></div>
+          <div class="visual-orbit orbit-two"></div>
+          <div class="visual-glow"></div>
+          <div class="visual-topline"><span>LOSD / ECOSYSTEM</span><span class="live-indicator">● EN DESARROLLO</span></div>
+          <div class="logo-stage">
+            <div class="logo-stage-halo"></div>
+            <img class="logo-stage-logo" src="assets/img/losd-logo-light.webp" alt="Logo LOSD TV">
+            <div class="logo-stage-caption">TECNOLOGÍA QUE CONECTA IDEAS</div>
+          </div>
+          <div class="visual-bottomline"><span>AR <b>→</b> LATAM</span><span>BUILDING THE NEXT</span></div>
+          <div class="floating-chip chip-editorial"><span class="chip-icon">✳</span><span>EDITORIAL<small>Ideas que inspiran</small></span></div>
+          <div class="floating-chip chip-connect"><span class="chip-icon">⌁</span><span>CONECTIVIDAD<small>Conexiones reales</small></span></div>
+          <div class="floating-chip chip-gaming"><span class="chip-icon">⌘</span><span>GAMING<small>La comunidad juega</small></span></div>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Programador/a o desarrollador/a">Postularme</a>
       </div>
-      <div class="job" data-area="Tecnología" data-txt="tecnico tecnicos redes soporte electronica internet estudiantes">
-        <div>
-          <h3>Técnicos y estudiantes afines</h3>
-          <p>Técnicos en redes, soporte, electrónica, energías renovables y estudiantes de carreras afines.</p>
-          <div class="tags"><span class="badge t">Redes</span><span class="badge t">Soporte</span><span class="badge t">Electrónica</span></div>
+      <div class="container hero-bottom">
+        <div class="hero-bottom-label">UN MISMO ECOSISTEMA</div>
+        <div class="hero-categories"><span>01 / EDITORIAL</span><i></i><span>02 / TECNOLOGÍA</span><i></i><span>03 / E-SPORTS</span><i></i><span>04 / ACADEMIA</span><i></i><span>05 / CONECTIVIDAD</span></div>
+        <div class="hero-scroll">SCROLL PARA DESCUBRIR <span>↓</span></div>
+      </div>
+    </section>
+
+    <!-- ECOSYSTEM OVERVIEW -->
+    <section class="ecosystem-strip" id="ecosistema">
+      <div class="container ecosystem-inner">
+        <div><span class="section-kicker">MÁS QUE UNA WEB</span><h2>Un ecosistema en construcción.</h2></div>
+        <p>Estamos desarrollando distintas unidades que se conectan entre sí para acercarte contenido útil, servicios y nuevas oportunidades.</p>
+        <a class="text-link" href="#editorial">Conocé las áreas <span>↘</span></a>
+      </div>
+    </section>
+
+    <!-- EDITORIAL -->
+    <section class="section editorial-section" id="editorial">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div><span class="section-kicker">01 / LECTURA &amp; BENEFICIOS</span><h2>Ideas para leer.<br><em>Motivos para descubrir.</em></h2></div>
+          <p>Publicaciones para aprender, inspirarte y estar al día. En papel o en pantalla, con contenidos para distintos intereses y edades.</p>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Técnico o estudiante afín">Postularme</a>
-      </div>
-      <div class="job" data-area="Administración" data-txt="administrador empresas pymes administracion contador contadores contaduria estudiante">
-        <div>
-          <h3>Administradores y contadores</h3>
-          <p>Administradores de empresas, de pymes y contadores, recibidos o en curso.</p>
-          <div class="tags"><span class="badge t">Administración</span><span class="badge t">Contaduría</span></div>
+        <div class="editorial-grid">
+          <article class="editorial-main-card reveal">
+            <div class="editorial-card-top"><span class="mini-label">LOSD EDITORIAL</span><span class="card-index">ED. / 001</span></div>
+            <div class="magazine-art" aria-hidden="true">
+              <div class="magazine-back"></div><div class="magazine-front">
+                <div class="magazine-brand">LOSD<span> MAGAZINE</span></div>
+                <div class="magazine-rule"></div>
+                <div class="magazine-headline">EL MUNDO<br><strong>EN TUS MANOS.</strong></div>
+                <div class="magazine-sub">TECNOLOGÍA · CULTURA · IDEAS</div>
+                <div class="magazine-circle">01</div>
+                <div class="magazine-footer">CURIOSIDAD SIN LÍMITES / 2026</div>
+              </div>
+            </div>
+            <div class="editorial-card-bottom"><span>EDICIONES DIGITALES Y FÍSICAS</span><span class="arrow-round">↗</span></div>
+          </article>
+          <div class="editorial-info reveal reveal-delay">
+            <div class="info-row"><span class="info-number">01</span><div><h3>Gratis y premium</h3><p>Ediciones impresas de entre 10 y 20 páginas, junto con publicaciones digitales para consultar desde cualquier dispositivo.</p></div></div>
+            <div class="info-row"><span class="info-number">02</span><div><h3>Temas para todos los días</h3><p>Informática, electrónica, tendencias asiáticas, bienestar, espiritualidad, cultura y novedades que vale la pena compartir.</p></div></div>
+            <div class="gold-feature">
+              <div class="gold-feature-head"><span class="gold-badge">✦</span><span>LA JOYA DE LA CORONA</span><span class="gold-odds">1 / 1.000</span></div>
+              <h3>El QR Dorado.</h3>
+              <p>En 1 de cada 1.000 ejemplares impresos habrá un QR dorado con acceso a premios sorpresa y sorteos exclusivos.</p>
+              <blockquote>«Sí, leíste bien. Vas al kiosco, te llevás tu revista y por ahí volvés a casa con un premio en la mano».</blockquote>
+              <span class="gold-foot">MECÁNICA Y CONDICIONES SE PUBLICARÁN CON CADA PROMOCIÓN.</span>
+            </div>
+          </div>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Administrador/a o contador/a">Postularme</a>
       </div>
-      <div class="job" data-area="Educación" data-txt="docente profesor clases educacion academia instructor">
-        <div>
-          <h3>Docentes e instructores</h3>
-          <p>Para dictar clases grupales e individuales, presenciales y virtuales.</p>
-          <div class="tags"><span class="badge t">Clases</span></div>
+    </section>
+
+    <!-- ESPORTS -->
+    <section class="section esports-section" id="esports">
+      <div class="container">
+        <div class="section-heading section-heading-light reveal">
+          <div><span class="section-kicker">02 / GAMING &amp; COMPETICIÓN</span><h2>Prepará el teclado.<br><em>La partida se viene.</em></h2></div>
+          <p>Una comunidad para jugar, competir y encontrarse. Estamos preparando torneos, coberturas y espacios para armar equipo.</p>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Docente o instructor/a">Postularme</a>
-      </div>
-      <div class="job" data-area="Ventas" data-txt="comercial vendedor ventas kiosco comercio distribucion revistas">
-        <div>
-          <h3>Agentes comerciales</h3>
-          <p>Para acercar las revistas y el servicio de internet a kioscos y comercios.</p>
-          <div class="tags"><span class="badge t">Ventas</span></div>
+        <div class="esports-layout">
+          <div class="esports-copy reveal">
+            <div class="esports-stat"><strong>GG</strong><span>BUENA PARTIDA.<br>MEJOR COMUNIDAD.</span></div>
+            <ul class="check-list check-list-cyan">
+              <li>Torneos de shooters, estrategia y juegos cooperativos en Steam.</li>
+              <li>Cobertura de ferias y eventos geek y gaming en Buenos Aires, Córdoba y todo el país.</li>
+              <li>Comunidad propia para armar squad, entrenar y competir por premios.</li>
+            </ul>
+            <button class="button button-primary" data-open-subscribe data-interest="E-Sports y comunidad">Quiero sumarme al squad <span>↗</span></button>
+          </div>
+          <div class="game-gallery reveal reveal-delay">
+            <figure class="game-poster game-poster-large"><img src="assets/img/esports-l4d2.webp" alt="Póster de convocatoria para jugadores de Left 4 Dead 2" loading="lazy"><figcaption><span>COOPERATIVO</span><b>LEFT 4 DEAD 2</b></figcaption></figure>
+            <figure class="game-poster"><img src="assets/img/esports-cs2.webp" alt="Póster de convocatoria para jugadores de Counter-Strike 2" loading="lazy"><figcaption><span>COMPETITIVO</span><b>COUNTER-STRIKE 2</b></figcaption></figure>
+            <figure class="game-poster"><img src="assets/img/esports-rocketleague.webp" alt="Póster de convocatoria para Rocket League" loading="lazy"><figcaption><span>DEPORTES &amp; ACCIÓN</span><b>ROCKET LEAGUE</b></figcaption></figure>
+          </div>
         </div>
-        <a href="#formCV" class="btn" data-puesto="Agente comercial">Postularme</a>
       </div>
+    </section>
+
+    <!-- TECH -->
+    <section class="section tech-section" id="tecnologia">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div><span class="section-kicker">03 / TECH SIN VUELTAS</span><h2>La tecnología,<br><em>en idioma humano.</em></h2></div>
+          <p>Soluciones, soporte y aprendizaje técnico sin complicaciones innecesarias. Lo importante es entender, resolver y hacerlo funcionar.</p>
+        </div>
+        <div class="tech-grid">
+          <article class="tech-card reveal"><div class="tech-icon">⌘</div><span class="tech-card-index">01 — DIGITAL</span><h3>Informática &amp; IA</h3><p>Soporte, redes, desarrollo y herramientas de inteligencia artificial aplicadas al trabajo, el estudio y los negocios.</p><a href="#contacto" class="text-link">Consultar novedades <span>↗</span></a></article>
+          <article class="tech-card reveal reveal-delay"><div class="tech-icon">ϟ</div><span class="tech-card-index">02 — ENERGÍA</span><h3>Electrónica &amp; energía</h3><p>Contenidos y servicios sobre instalaciones monofásicas y trifásicas (220/380 V), UPS, inversores y sistemas de respaldo.</p><a href="#contacto" class="text-link">Conocer el área <span>↗</span></a></article>
+          <article class="tech-card reveal"><div class="tech-icon">⌁</div><span class="tech-card-index">03 — INFRAESTRUCTURA</span><h3>Redes &amp; cableado</h3><p>Fibra óptica, coaxial, UTP, conectividad y conceptos esenciales para hogares, comercios y proyectos.</p><a href="#internet" class="text-link">Ver conectividad <span>↗</span></a></article>
+          <article class="tech-card reveal reveal-delay"><div class="tech-icon">▤</div><span class="tech-card-index">04 — APRENDIZAJE</span><h3>Guías prácticas</h3><p>Electrónica básica e intermedia explicada paso a paso, con ejemplos que puedas llevar a la práctica.</p><a href="#academia" class="text-link">Ir a Academia <span>↗</span></a></article>
+        </div>
+        <div class="tech-note"><span class="note-symbol">i</span><p>Los trabajos eléctricos y de infraestructura que lo requieran deberán ser realizados por personal idóneo y habilitado, conforme a la normativa aplicable.</p></div>
+      </div>
+    </section>
+
+    <!-- ACADEMY -->
+    <section class="section academy-section" id="academia">
+      <div class="container">
+        <div class="academy-panel reveal">
+          <div class="academy-graphic" aria-hidden="true"><div class="academy-ring ring-a"></div><div class="academy-ring ring-b"></div><div class="academy-core">LOSD<span>ACADEMY</span></div><div class="academy-orbit-label">APRENDER / PRACTICAR / CRECER</div></div>
+          <div class="academy-copy">
+            <span class="section-kicker">04 / CAPACITACIÓN CON PROYECCIÓN LABORAL</span>
+            <h2>Nunca es tarde<br>para aprender.</h2>
+            <p>Formación pensada para adquirir herramientas reales, actualizar conocimientos y abrir nuevas oportunidades.</p>
+            <div class="academy-points"><span>Clases presenciales y virtuales</span><span>Modalidad individual o grupal</span><span>Zoom y plataformas propias</span><span>Programación, redes, electrónica y administración</span></div>
+            <div class="academy-offer"><div><small>BENEFICIO DE LANZAMIENTO</small><strong>1.er mes <em>100% sin cargo</em></strong><span>Para los primeros suscriptores que accedan a la promoción. Cupos y condiciones por confirmar.</span></div><button class="button button-primary" data-open-subscribe data-interest="Academia LOSD">Quiero conocer los cursos <span>↗</span></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOSD TV -->
+    <section class="section tv-section" id="losdtv">
+      <div class="container tv-layout">
+        <div class="tv-copy reveal">
+          <span class="section-kicker">05 / STREAMING &amp; CONTENIDOS</span>
+          <div class="coming-badge"><span></span> COMING SOON</div>
+          <h2>Menos zapping.<br><em>Más de lo que te gusta.</em></h2>
+          <p>Estamos explorando una plataforma de contenidos y transmisiones con una experiencia propia, pensada para descubrir nuevas historias y aprender desde un mismo lugar.</p>
+          <ul class="check-list">
+            <li>Proyecto de plataforma de streaming y contenidos digitales, con exploración de distribución IPTV/TDA según factibilidad y autorizaciones.</li>
+            <li>Concepto de decodificador LOSD con una propuesta de hasta 100 canales o espacios privados.</li>
+            <li>Novelas románticas, tendencias asiáticas, K-dramas, anime, capacitaciones y transmisiones en vivo.</li>
+            <li>Beneficios y sorteos para suscriptores activos, según las bases de cada campaña.</li>
+          </ul>
+          <p class="fine-print">Servicio en etapa de planificación. La oferta final dependerá de acuerdos, licencias, disponibilidad técnica y condiciones comerciales.</p>
+          <button class="button button-primary" data-open-subscribe data-interest="LOSD.TV y streaming">Avisame cuando esté listo <span>↗</span></button>
+        </div>
+        <div class="tv-device-wrap reveal reveal-delay">
+          <div class="tv-device-glow"></div>
+          <div class="tv-screen">
+            <div class="tv-screen-top"><span>LOSD<span class="cyan">.TV</span></span><span class="screen-pill">PREVIEW / 2026</span></div>
+            <div class="tv-screen-content"><div class="screen-overline">TU PRÓXIMO DESTINO</div><div class="screen-title">PLAY<br><span>YOUR WORLD.</span></div><div class="screen-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <div class="tv-screen-bottom"><span>ENTRETENIMIENTO</span><span>EDUCACIÓN</span><span>EN VIVO</span></div>
+          </div>
+          <div class="tv-device-base"></div>
+          <div class="tv-device-label"><span class="device-dot"></span> DISPOSITIVO PROPIO / CONCEPTO EN DESARROLLO</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERNET -->
+    <section class="section internet-section" id="internet">
+      <div class="container">
+        <div class="internet-head reveal">
+          <div><span class="section-kicker">06 / CONECTIVIDAD &amp; HOTSPOT</span><h2>Internet para conectar.<br><em>Y para compartir.</em></h2></div>
+          <div class="discount-card"><small>BENEFICIO DE PRE-LANZAMIENTO</small><strong>HASTA <b>50%</b></strong><span>DE DESCUENTO EN PLANES SELECCIONADOS</span></div>
+        </div>
+        <p class="internet-intro reveal">Estamos trabajando en convenios y alternativas de conectividad para hogares, profesionales y comercios, con una mirada local y proyección regional.</p>
+        <div class="connection-types reveal">
+          <div class="connection-type"><span class="connection-icon">⌁</span><b>Fibra óptica</b><small>FTTH</small></div>
+          <div class="connection-type"><span class="connection-icon">◉</span><b>Satelital</b><small>ENLACES REMOTOS</small></div>
+          <div class="connection-type"><span class="connection-icon">⌗</span><b>Terrestre</b><small>RADIOENLACES</small></div>
+          <div class="connection-type"><span class="connection-icon">▥</span><b>4G / 5G</b><small>REDES MÓVILES</small></div>
+        </div>
+        <div class="internet-lower">
+          <article class="redundancy-card reveal"><div class="network-visual" aria-hidden="true"><div class="network-node node-center">LOSD</div><div class="network-node node-a">FTTH</div><div class="network-node node-b">4G/5G</div><div class="network-node node-c">SAT</div><svg viewBox="0 0 420 210" preserveAspectRatio="none"><path d="M210 105 L76 40 M210 105 L344 40 M210 105 L210 190"/><circle cx="210" cy="105" r="4"/><circle cx="76" cy="40" r="3"/><circle cx="344" cy="40" r="3"/><circle cx="210" cy="190" r="3"/></svg></div><div><span class="mini-label">PARA COMERCIOS Y PROFESIONALES</span><h3>Una conexión de respaldo cuando más la necesitás.</h3><p>Diseño de enlaces redundantes: si falla la conexión principal, una alternativa disponible puede tomar el relevo, según la infraestructura contratada.</p></div></article>
+          <article class="hotspot-card reveal reveal-delay"><div class="hotspot-top"><span class="mini-label">REDES COMUNITARIAS</span><span class="hotspot-icon">⌁</span></div><h3>Tu zona también puede conectarse.</h3><p>Equipamiento y administración para implementar puntos de acceso y redes comunitarias.</p><div class="hotspot-benefits"><span>Compartir conectividad</span><span>Gestionar usuarios</span><span>Modelo comercial o comunitario</span></div><button class="text-link text-link-bright" data-open-subscribe data-interest="Internet y Hotspot">Me interesa esta solución <span>↗</span></button></article>
+        </div>
+        <div class="coverage-line"><span>PROYECCIÓN REGIONAL</span><b>ARGENTINA</b><i></i><b>CHILE</b><i></i><b>BRASIL</b><i></i><b>PERÚ</b><i></i><b>MÉXICO</b><span class="coverage-caption">Cobertura sujeta a convenios y disponibilidad en cada zona.</span></div>
+      </div>
+    </section>
+
+    <!-- DISTRIBUTION -->
+    <section class="section partners-section" id="distribucion">
+      <div class="container partners-layout">
+        <div class="partners-copy reveal">
+          <span class="section-kicker">07 / RED DE DISTRIBUCIÓN</span>
+          <h2>¿Tenés un negocio<br>o puesto de diarios?<br><em>Sumate a la movida.</em></h2>
+          <p>Queremos construir una red de comercios, kioscos y canillitas que acerquen las publicaciones LOSD a cada barrio.</p>
+          <ul class="check-list">
+            <li>Distribuí o vendé revistas LOSD en tu local.</li>
+            <li>Accedé a bonificaciones y beneficios especiales.</li>
+            <li>Posibilidad de equipamiento Hotspot y servicio de internet bonificado, según volumen y evaluación.</li>
+          </ul>
+          <button class="button button-primary" data-open-subscribe data-interest="Comercios y distribución">Quiero ser punto de distribución <span>↗</span></button>
+        </div>
+        <div class="partner-visual reveal reveal-delay">
+          <div class="partner-card-back"></div>
+          <div class="partner-card-front"><div class="partner-card-stamp">LOSD<br><small>PARTNER NETWORK</small></div><div class="partner-card-line"></div><div class="partner-card-title">TU NEGOCIO.<br><strong>NUEVAS OPORTUNIDADES.</strong></div><div class="partner-card-bottom"><span>RETAIL / COMUNIDAD / CONECTIVIDAD</span><span>07 — 26</span></div></div>
+          <div class="partner-orbit-label">CRECEMOS CON VOS</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HR -->
+    <section class="section join-section" id="sumate">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div><span class="section-kicker">08 / SUMATE AL EQUIPO</span><h2>Las ideas crecen<br><em>con las personas.</em></h2></div>
+          <p>Estamos preparando el equipo para el lanzamiento. Buscamos perfiles creativos, técnicos y profesionales con ganas de construir.</p>
+        </div>
+        <div class="join-layout">
+          <div class="join-visual reveal"><img src="assets/img/equipo-tecnico.webp" alt="Póster LOSD de convocatoria para equipo técnico de esports y eventos" loading="lazy"><div class="join-image-caption"><span>LOSD TALENT</span><b>EL PRÓXIMO PROYECTO TAMBIÉN PUEDE SER TUYO.</b></div></div>
+          <div class="join-content reveal reveal-delay">
+            <span class="open-search"><i></i> CONVOCATORIAS EN PREPARACIÓN</span>
+            <h3>¿Tenés talento?<br>Queremos conocerte.</h3>
+            <div class="job-list">
+              <div><span class="job-code">01</span><span><b>Diseño e ilustración</b><small>Diseñadores, ilustradores y perfiles creativos para revistas y eventos.</small></span><span class="job-plus">+</span></div>
+              <div><span class="job-code">02</span><span><b>Desarrollo web</b><small>Programadores, desarrolladores y perfiles digitales.</small></span><span class="job-plus">+</span></div>
+              <div><span class="job-code">03</span><span><b>Electrónica y redes</b><small>Técnicos en electrónica, redes y telecomunicaciones.</small></span><span class="job-plus">+</span></div>
+              <div><span class="job-code">04</span><span><b>Administración</b><small>Estudiantes y profesionales de contabilidad y gestión de PyMEs.</small></span><span class="job-plus">+</span></div>
+            </div>
+            <button class="button button-primary" id="openApplication">Adjuntar CV / Postularme <span>↗</span></button>
+            <p class="form-note">También podés escribir a <a href="mailto:rrhh@losd.com.ar">rrhh@losd.com.ar</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section contact-section" id="contacto">
+      <div class="container">
+        <div class="contact-top reveal"><div><span class="section-kicker">09 / CONTACTO OFICIAL</span><h2>Hablemos de<br><em>lo que viene.</em></h2></div><p>¿Tenés una consulta, una propuesta o querés recibir novedades? Dejanos tus datos y elegí cómo querés participar.</p></div>
+        <div class="contact-layout">
+          <div class="contact-details reveal">
+            <div class="contact-brand"><img src="assets/img/tarjeta-contacto.webp" alt="Tarjeta de presentación oficial de LOSD" loading="lazy"></div>
+            <div class="contact-method"><span class="contact-method-icon">↗</span><div><small>WHATSAPP / ZELLO / ZOOM</small><a href="https://wa.me/5491161101111" target="_blank" rel="noopener">+54 9 11 6110-1111</a></div></div>
+            <div class="contact-method"><span class="contact-method-icon">@</span><div><small>EMAIL OFICIAL</small><a href="mailto:contacto@losd.com.ar">contacto@losd.com.ar</a></div></div>
+            <div class="contact-method"><span class="contact-method-icon">◎</span><div><small>REDES SOCIALES</small><b>@losdtv</b><span class="social-list">Instagram · YouTube · Twitch · TikTok</span></div></div>
+            <div class="contact-method"><span class="contact-method-icon">⌖</span><div><small>UBICACIÓN</small><b>Italia 4078, San Miguel</b><span class="social-list">Buenos Aires, Argentina</span></div></div>
+          </div>
+          <div class="contact-form-card reveal reveal-delay">
+            <div class="form-card-head"><span class="mini-label">FORMULARIO DE CONTACTO</span><span class="form-secure">● CONEXIÓN SEGURA</span></div>
+            <h3>Dejanos tus datos.</h3>
+            <p>Te contactaremos con novedades del área que te interese.</p>
+            <form class="lead-form" action="https://formsubmit.co/contacto@losd.com.ar" method="POST">
+              <input type="hidden" name="_subject" value="Nuevo contacto desde losd.com.ar">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_next" value="https://losd.com.ar/gracias.html">
+              <div class="form-row"><label>Nombre y apellido<input type="text" name="name" placeholder="Tu nombre" autocomplete="name" required></label><label>Email<input type="email" name="email" placeholder="nombre@email.com" autocomplete="email" required></label></div>
+              <div class="form-row"><label>WhatsApp<input type="tel" name="whatsapp" placeholder="+54 9 ..." autocomplete="tel"></label><label>Localidad<input type="text" name="localidad" placeholder="Tu ciudad" autocomplete="address-level2"></label></div>
+              <label>¿Qué te interesa?<select name="interes"><option value="Novedades generales">Novedades generales</option><option>Editorial y QR Dorado</option><option>E-Sports y gaming</option><option>Tecnología y electrónica</option><option>Academia y cursos</option><option>LOSD.TV y streaming</option><option>Internet y Hotspot</option><option>Comercios y distribución</option><option>Trabajar en LOSD</option></select></label>
+              <label class="consent-row"><input type="checkbox" name="consentimiento" value="Acepto recibir novedades de LOSD" required><span>Acepto que LOSD utilice estos datos para responder mi consulta y enviarme novedades relacionadas.</span></label>
+              <button class="button button-primary button-wide" type="submit">Enviar mis datos <span>↗</span></button>
+              <p class="form-note">Al enviar, tus datos serán remitidos al correo oficial de LOSD mediante un servicio externo de formularios.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand"><a class="brand brand-footer" href="#inicio"><span class="brand-symbol" aria-hidden="true"><span>L</span><i></i></span><span class="brand-word">LOSD<span>.TV</span><small>TECNOLOGÍA · CONTENIDO · COMUNIDAD</small></span></a><p>Un ecosistema en construcción para conectar ideas, personas y oportunidades.</p></div>
+        <div class="footer-links"><span>EXPLORÁ LOSD</span><a href="#editorial">Editorial</a><a href="#esports">E-Sports</a><a href="#tecnologia">Tecnología</a><a href="#academia">Academia</a></div>
+        <div class="footer-links"><span>EL PROYECTO</span><a href="#losdtv">LOSD.TV</a><a href="#internet">Internet &amp; Hotspot</a><a href="#distribucion">Distribución</a><a href="#sumate">Trabajá con nosotros</a></div>
+        <div class="footer-links footer-contact"><span>CONTACTO</span><a href="mailto:contacto@losd.com.ar">contacto@losd.com.ar</a><a href="https://wa.me/5491161101111" target="_blank" rel="noopener">+54 9 11 6110-1111</a><span>Italia 4078 · San Miguel</span><span>Buenos Aires · Argentina</span></div>
+      </div>
+      <div class="footer-legal">
+        <div><span>© <span id="currentYear">2026</span> LOSD. TODOS LOS DERECHOS RESERVADOS.</span><span class="footer-legal-muted">PROYECTO EN ETAPA DE PRE-LANZAMIENTO.</span></div>
+        <div class="fiscal-data"><span>CUIT: 20-34432396-9</span><span>IDENTIFICACIÓN FISCAL</span><div class="fiscal-qr" aria-label="Espacio reservado para el QR oficial de Data Fiscal de ARCA"><span>QR</span><small>ARCA<br>DATA FISCAL<br>PENDIENTE</small></div></div>
+      </div>
+      <div class="footer-bottom"><span>DISEÑADO PARA CONECTAR.</span><a href="#inicio">VOLVER ARRIBA ↑</a></div>
     </div>
-    <p class="vacio" id="sinResultados">No encontramos puestos con esa búsqueda. Probá con otra palabra o enviá tu CV igual.</p>
+  </footer>
 
-    <form class="form-cv" id="formCV" onsubmit="return enviarCV(event)">
-      <h3 style="font-size:22px">Enviá tu CV</h3>
-      <p style="color:var(--gris);margin-bottom:20px;font-size:14px">Completá tus datos y adjuntá tu CV en PDF.</p>
-      <div class="fila">
-        <div><label for="nom">Nombre y apellido</label><input id="nom" required></div>
-        <div><label for="mail">Email</label><input id="mail" type="email" required></div>
-      </div>
-      <div class="fila">
-        <div><label for="pues">Puesto de interés</label>
-          <select id="pues">
-            <option>Ilustrador/a para ferias y eventos</option>
-            <option>Programador/a o desarrollador/a</option>
-            <option>Técnico o estudiante afín</option>
-            <option>Administrador/a o contador/a</option>
-            <option>Docente o instructor/a</option>
-            <option>Agente comercial</option>
-          </select>
-        </div>
-        <div><label for="cv">Adjuntar CV (PDF)</label><input id="cv" type="file" accept=".pdf"></div>
-      </div>
-      <div><label for="msg">Mensaje (opcional)</label><textarea id="msg"></textarea></div>
-      <div style="margin-top:18px"><button class="btn" type="submit">Enviar postulación</button></div>
-      <div class="aviso" id="avisoCV">¡Gracias! Recibimos tu postulación. Te contactaremos pronto.</div>
-    </form>
-  </div>
-</section>
-
-<!-- ============ CONTACTO ============ -->
-<section id="contacto" class="sec">
-  <div class="wrap contacto">
-    <div>
-      <span class="etiqueta">Contacto</span>
-      <h2>Hablemos<span class="linea"></span></h2>
-      <p class="lead">Consultá por revistas, clases, internet, comercios o publicidad.</p>
-      <div class="dato"><div class="ico">🌐</div><div><b>Web</b><span>www.losd.com.ar</span></div></div>
-      <div class="dato"><div class="ico">📞</div><div><b>Teléfono</b><span class="fono">+54 9 (código de área) 000-0000</span></div></div>
-      <div class="dato"><div class="ico">✉️</div><div><b>Email</b><span>contacto@losd.com.ar</span></div></div>
-      <div class="dato"><div class="ico">📍</div><div><b>Ubicación</b><span>Argentina · CABA · Córdoba Capital · y LATAM próximamente</span></div></div>
-      <div class="dato"><div class="ico">👤</div><div><b>CEO</b><span>Nombre del CEO</span></div></div>
-    </div>
-    <form class="form-cv" style="margin-top:0" onsubmit="event.preventDefault();document.getElementById('avisoC').style.display='block';this.reset();">
-      <h3 style="font-size:20px">Escribinos</h3>
-      <div style="margin:14px 0"><label for="cnom">Nombre</label><input id="cnom" required></div>
-      <div style="margin-bottom:14px"><label for="cmail">Email</label><input id="cmail" type="email" required></div>
-      <div style="margin-bottom:14px"><label for="cmsg">Mensaje</label><textarea id="cmsg" required></textarea></div>
-      <button class="btn" type="submit">Enviar mensaje</button>
-      <div class="aviso" id="avisoC">¡Mensaje enviado! Te respondemos a la brevedad.</div>
-    </form>
-  </div>
-</section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <div>
-      <div class="logo" style="font-size:18px"><span>LOSD</span></div>
-      <p>© 2026 LOSD · Editorial · Tecnología · Entretenimiento · Internet</p>
-    </div>
-    <div class="redes">
-      <p>Redes: <a href="#" aria-label="Instagram">@losdtv</a></p>
+  <!-- Subscription modal -->
+  <div class="modal" id="subscribeModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="subscribeTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Cerrar ventana" data-close-modal>×</button>
+      <div class="modal-mark">LOSD<span>.TV</span></div>
+      <span class="section-kicker">NOVEDADES &amp; BENEFICIOS</span>
+      <h2 id="subscribeTitle">Enterate antes<br>que nadie.</h2>
+      <p>Sumate a la lista de novedades y recibí información sobre lanzamientos, promociones y convocatorias.</p>
+      <form class="modal-form" action="https://formsubmit.co/contacto@losd.com.ar" method="POST">
+        <input type="hidden" name="_subject" value="Nueva suscripción / novedades LOSD">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://losd.com.ar/gracias.html">
+        <label>Nombre<input type="text" name="name" placeholder="Tu nombre" autocomplete="name" required></label>
+        <label>Email<input type="email" name="email" placeholder="nombre@email.com" autocomplete="email" required></label>
+        <div class="form-row"><label>WhatsApp<input type="tel" name="whatsapp" placeholder="+54 9 ..." autocomplete="tel"></label><label>Localidad<input type="text" name="localidad" placeholder="Tu ciudad" autocomplete="address-level2"></label></div>
+        <label>Área de interés<select name="interes" id="modalInterest"><option value="Novedades generales">Quiero recibir todas las novedades</option><option>Editorial y QR Dorado</option><option>E-Sports y gaming</option><option>Tecnología y electrónica</option><option>Academia y cursos</option><option>LOSD.TV y streaming</option><option>Internet y Hotspot</option><option>Comercios y distribución</option><option>Trabajar en LOSD</option></select></label>
+        <label class="consent-row"><input type="checkbox" name="consentimiento" value="Acepto recibir novedades de LOSD" required><span>Acepto recibir novedades de LOSD y que mis datos se utilicen para contactarme sobre el proyecto.</span></label>
+        <button class="button button-primary button-wide" type="submit">Quiero recibir novedades <span>↗</span></button>
+        <small class="modal-privacy">Sin spam. Solo novedades y comunicaciones relevantes del proyecto.</small>
+      </form>
     </div>
   </div>
-</footer>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="caja">
-    <h3 id="modalTit">¡Gracias!</h3>
-    <p id="modalTxt"></p>
-    <button class="btn" onclick="cerrarModal()">Cerrar</button>
+  <!-- Job application modal -->
+  <div class="modal" id="applicationModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel modal-panel-wide">
+      <button class="modal-close" type="button" aria-label="Cerrar ventana" data-close-modal>×</button>
+      <div class="modal-mark">LOSD<span>.TALENT</span></div>
+      <span class="section-kicker">CONVOCATORIA / POSTULACIÓN</span>
+      <h2 id="applicationTitle">Tu próximo proyecto<br>puede ser LOSD.</h2>
+      <p>Completá tus datos y adjuntá tu CV. También podés enviar tu presentación a <a href="mailto:rrhh@losd.com.ar">rrhh@losd.com.ar</a>.</p>
+      <form class="modal-form" action="https://formsubmit.co/rrhh@losd.com.ar" method="POST" enctype="multipart/form-data" id="cvForm">
+        <input type="hidden" name="_subject" value="Nueva postulación - LOSD">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://losd.com.ar/gracias.html">
+        <label>Nombre y apellido<input type="text" name="name" placeholder="Tu nombre" autocomplete="name" required></label>
+        <div class="form-row"><label>Email<input type="email" name="email" placeholder="nombre@email.com" autocomplete="email" required></label><label>WhatsApp<input type="tel" name="whatsapp" placeholder="+54 9 ..." autocomplete="tel"></label></div>
+        <label>Área de interés<select name="area" required><option value="">Seleccioná un área</option><option>Diseño e ilustración</option><option>Desarrollo web y programación</option><option>Electrónica, redes y telecomunicaciones</option><option>Contabilidad y administración</option><option>Gaming, eventos y producción</option><option>Otra / Propuesta espontánea</option></select></label>
+        <label>Contanos brevemente sobre vos<textarea name="presentacion" rows="3" placeholder="Experiencia, portfolio, disponibilidad..."></textarea></label>
+        <label class="file-field">Adjuntar CV <span class="file-help">PDF, DOC o DOCX · máximo 10 MB</span><input type="file" name="attachment" id="cvFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required></label>
+        <label class="consent-row"><input type="checkbox" name="consentimiento" value="Acepto el uso de mis datos para esta postulación" required><span>Acepto que LOSD utilice mis datos para evaluar esta postulación y contactarme.</span></label>
+        <button class="button button-primary button-wide" type="submit">Enviar postulación <span>↗</span></button>
+        <small class="modal-privacy">El archivo se enviará a rrhh@losd.com.ar mediante un servicio externo de formularios.</small>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-  // Menú móvil
-  const menuBtn = document.getElementById('menuBtn');
-  const menu = document.getElementById('menu');
-  menuBtn.addEventListener('click', () => menu.classList.toggle('open'));
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
-
-  // Pestañas de temáticas
-  document.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(b => b.classList.remove('act'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('act'));
-      btn.classList.add('act');
-      document.getElementById(btn.dataset.tab).classList.add('act');
-    });
-  });
-
-  // Buscador de empleos
-  const buscaJob = document.getElementById('buscaJob');
-  const filtroArea = document.getElementById('filtroArea');
-  const jobs = document.querySelectorAll('.job');
-  function filtrarJobs() {
-    const q = buscaJob.value.trim().toLowerCase();
-    const area = filtroArea.value;
-    let visibles = 0;
-    jobs.forEach(j => {
-      const texto = (j.dataset.txt + ' ' + j.textContent).toLowerCase();
-      const okTxt = !q || texto.includes(q);
-      const okArea = !area || j.dataset.area === area;
-      const mostrar = okTxt && okArea;
-      j.style.display = mostrar ? '' : 'none';
-      if (mostrar) visibles++;
-    });
-    document.getElementById('sinResultados').style.display = visibles ? 'none' : 'block';
-  }
-  buscaJob.addEventListener('input', filtrarJobs);
-  filtroArea.addEventListener('change', filtrarJobs);
-  document.getElementById('btnLimpiar').addEventListener('click', () => {
-    buscaJob.value = ''; filtroArea.value = ''; filtrarJobs();
-  });
-
-  // Postularse: preselecciona el puesto en el formulario
-  document.querySelectorAll('[data-puesto]').forEach(a => {
-    a.addEventListener('click', () => {
-      const sel = document.getElementById('pues');
-      [...sel.options].forEach(o => { if (o.text === a.dataset.puesto) sel.value = o.value; });
-    });
-  });
-
-  function enviarCV(e) {
-    e.preventDefault();
-    document.getElementById('avisoCV').style.display = 'block';
-    e.target.reset();
-    return false;
-  }
-
-  // Suscripción
-  document.getElementById('btnSus').addEventListener('click', () => {
-    const v = document.getElementById('emailSus').value.trim();
-    if (!v || !v.includes('@')) { alert('Ingresá un email válido.'); return; }
-    document.getElementById('avisoSus').style.display = 'block';
-    document.getElementById('emailSus').value = '';
-  });
-
-  // Animación de aparición al hacer scroll
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('vis'); });
-  }, { threshold: .15 });
-  document.querySelectorAll('.card,.plan,.evento,.paso,.enlace,.genre,.score').forEach(el => {
-    el.classList.add('reveal');
-    io.observe(el);
-  });
-
-  function cerrarModal(){ document.getElementById('modal').classList.remove('open'); }
-</script>
+  <!-- Music: user activates playback explicitly; default volume is 50%. -->
+  <audio id="siteMusic" src="assets/audio/voyage-voyage-remix.mp3" loop preload="none"></audio>
+  <button class="audio-control" id="audioControl" type="button" aria-pressed="false" aria-label="Activar música">
+    <span class="audio-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="audio-control-text">ACTIVAR MÚSICA</span><span class="audio-volume">50%</span>
+  </button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js" defer></script>
 </body>
 </html>
